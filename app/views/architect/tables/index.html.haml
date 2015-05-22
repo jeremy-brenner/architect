@@ -1,0 +1,5 @@
+- @schema_tables.each do |schema_table|
+  .schema_table
+    .table_name= schema_table.name
+    - schema_table.schema_columns.each do |schema_column|
+      .table_column= schema_column.name

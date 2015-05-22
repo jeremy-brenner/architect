@@ -1,4 +1,4 @@
 Architect::Engine.routes.draw do
-  root to: 'application#index'
+  root to: 'tables#index'
   resources :tables
 end
