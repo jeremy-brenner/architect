@@ -7,17 +7,13 @@ module Architect
     column :table, :string
     column :precision, :string
     column :limit, :string
-
-     #columns: ActiveRecord::Base.connection.columns(table),
-     #         indexes: ActiveRecord::Base.connection.indexes(table),
-     #         primary_key: ActiveRecord::Base.connection.primary_key(table),
-     #         foreign_keys: ActiveRecord::Base.connection.foreign_keys(table)
-     def self.all(table)
-        db = ActiveRecord::Base.connection.current_database
-        ActiveRecord::Base.connection.columns(table).map do |field|
-          Architect::SchemaColumn.new(name:field.name,database:db,table:table,precision:field.precision,limit:field.limit)
-        end
-     end
+    column :sql_type, :string
+    
+    def self.all(table)
+      ActiveRecord::Base.connection.columns(table).map do |field|
+        Architect::SchemaColumn.new(name:field.name,database:current_database,table:table,sql_type:field.sql_type,precision:field.precision,limit:field.limit)
+      end
+    end
 
   end
 end

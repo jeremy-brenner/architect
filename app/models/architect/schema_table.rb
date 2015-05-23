@@ -1,5 +1,6 @@
 module Architect
   class SchemaTable < Architect::SchemaModel
+    after_initialize :load_model
 
     column :name, :string
     column :database, :string
@@ -8,10 +9,38 @@ module Architect
       Architect::SchemaColumn.all(name)
     end
 
+    def model_exists?
+      not @model.nil?
+    end
+
+    def join_data
+      return [] unless model_exists?
+      @model._reflections.values.map do |ref|
+        jk = ref.join_keys(ref.name.to_s.classify.constantize)
+        {
+          'local' => {
+            'table' => name,
+            'field' => jk['foreign_key']
+          },
+          'remote' => {
+            'table' => ref.plural_name.to_s,
+            'field' => jk['key']
+          }
+        }
+      end
+    end
+
+    def load_model
+      begin
+        @model ||= name.classify.constantize
+      rescue
+        @model = nil
+      end
+    end
+
     def self.all
-      db = ActiveRecord::Base.connection.current_database
       ActiveRecord::Base.connection.tables.map do |table|
-        Architect::SchemaTable.new(name:table,database:db)
+        Architect::SchemaTable.new(name:table,database:current_database)
       end
     end
   end

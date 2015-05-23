@@ -2,12 +2,25 @@
   border: 1px solid black;
   display: inline-block;
   .table_name {
-    background-color: #DDDDFF;
+    background-color: #FFDDDD;
     padding: 5px;
     text-align: center;
     font-weight: bold;
   }
-  .table_column {
-
+  .table_name.has_model {
+      background-color: #DDDDFF;
+  }
+  .schema_column {
+    border-top: 1px dashed gray;
+    padding: 2px;
+    .column_precision, .column_limit {
+      display: none;
+    }
+  }
+  .schema_column > div {
+    display: inline-block;
+  }
+  .is_key {
+    background-color: #DDFFDD;
   }
 }

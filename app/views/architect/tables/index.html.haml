@@ -1,5 +1,9 @@
 - @schema_tables.each do |schema_table|
-  .schema_table
-    .table_name= schema_table.name
+  .schema_table{ data: { name: schema_table.name, joindata: schema_table.join_data.to_json } }
+    .table_name{ class: schema_table.model_exists? ? 'has_model' : '' }= schema_table.name
     - schema_table.schema_columns.each do |schema_column|
-      .table_column= schema_column.name
+      .schema_column{ data: schema_column.attributes }
+        .column_name= schema_column.name
+        .column_type= schema_column.sql_type
+        .column_precision= schema_column.precision
+        .column_limit= schema_column.limit
